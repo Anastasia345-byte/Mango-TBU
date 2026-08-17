@@ -23,7 +23,7 @@ function MoneyField({ label, name, register }: { label: string; name: NumberKey;
 }
 
 function RateField({ label, name, value, setValue }: { label: string; name: NumberKey; value: number; setValue: ReturnType<typeof useForm<SalonInputs>>["setValue"] }) {
-  return <label className="field"><span>{label}</span><div className="suffix"><input type="number" min="0" max="100" step="0.1" value={Number.isFinite(value) ? value * 100 : 0} onChange={(e) => setValue(name, Number(e.target.value) / 100, { shouldDirty: true })} /><b>%</b></div></label>;
+  return <label className="field"><span>{label}</span><div className="suffix"><input type="number" min="0" max="100" step="0.1" value={Number.isFinite(value) ? Math.round(value * 1000) / 10 : 0} onChange={(e) => setValue(name, Number(e.target.value) / 100, { shouldDirty: true, shouldValidate: true })} /><b>%</b></div></label>;
 }
 
 function Kpi({ title, value, detail, tone = "neutral" }: { title: string; value: string; detail: string; tone?: "good" | "warn" | "bad" | "neutral" }) {
@@ -134,7 +134,7 @@ export function Dashboard() {
         <fieldset><legend>Постоянные расходы</legend><MoneyField label="Аренда" name="rent" register={register}/><MoneyField label="Коммунальные" name="utilities" register={register}/><MoneyField label="Административный ФОТ" name="adminPayroll" register={register}/><MoneyField label="Взносы на адм. ФОТ" name="adminContributions" register={register}/><MoneyField label="Маркетинг" name="marketing" register={register}/><MoneyField label="ПО" name="software" register={register}/><MoneyField label="Бухгалтерия" name="accounting" register={register}/><MoneyField label="Хозяйственные" name="household" register={register}/><MoneyField label="Прочие" name="otherFixed" register={register}/></fieldset>
         <fieldset><legend>Себестоимость и цели</legend><MoneyField label="Себестоимость розницы" name="retailCost" register={register}/><MoneyField label="Себестоимость косметики" name="ownCosmeticsCost" register={register}/><MoneyField label="Постоянные расходы услуг" name="serviceFixedCosts" register={register}/><RateField label="Целевая рентабельность" name="targetMargin" value={values.targetMargin} setValue={setValue}/><RateField label="Минимальный запас" name="minimumSafetyMargin" value={values.minimumSafetyMargin} setValue={setValue}/></fieldset>
       </div>
-      {!formState.isValid && <p className="error"><AlertTriangle/>Проверьте отрицательные значения и ставки выше 100%.</p>}
+      {Object.keys(formState.errors).length > 0 && <p className="error"><AlertTriangle/>Проверьте отрицательные значения и ставки выше 100%.</p>}
     </section>
 
     <section className="panel">
@@ -142,10 +142,10 @@ export function Dashboard() {
       <div className="table-wrap"><table className="editor"><thead><tr><th>Направление</th><th>Категория</th><th>Мастеров</th><th>Цена</th><th>Услуг</th><th>Комиссия, %</th><th>Выплата/услуга</th><th>Материалы, %</th><th>Прочие, %</th><th>Прочие/услуга</th><th></th></tr></thead><tbody>{fields.fields.map((field, i) => <tr key={field.formId}>
         <td><input {...register(`categories.${i}.direction`)} /></td><td><input {...register(`categories.${i}.name`)} /></td>
         {(["masters","price","volume"] as const).map(k => <td key={k}><input type="number" min="0" {...register(`categories.${i}.${k}`, { valueAsNumber: true })}/></td>)}
-        <td><input type="number" min="0" max="100" value={(values.categories?.[i]?.commissionRate ?? 0)*100} onChange={e=>setValue(`categories.${i}.commissionRate`,Number(e.target.value)/100)}/></td>
+        <td><input type="number" min="0" max="100" value={Math.round((values.categories?.[i]?.commissionRate ?? 0)*1000)/10} onChange={e=>setValue(`categories.${i}.commissionRate`,Number(e.target.value)/100,{shouldValidate:true})}/></td>
         <td><input type="number" min="0" {...register(`categories.${i}.payoutPerService`,{valueAsNumber:true})}/></td>
-        <td><input type="number" min="0" max="100" value={(values.categories?.[i]?.consumablesRate ?? 0)*100} onChange={e=>setValue(`categories.${i}.consumablesRate`,Number(e.target.value)/100)}/></td>
-        <td><input type="number" min="0" max="100" value={(values.categories?.[i]?.otherVariableRate ?? 0)*100} onChange={e=>setValue(`categories.${i}.otherVariableRate`,Number(e.target.value)/100)}/></td>
+        <td><input type="number" min="0" max="100" value={Math.round((values.categories?.[i]?.consumablesRate ?? 0)*1000)/10} onChange={e=>setValue(`categories.${i}.consumablesRate`,Number(e.target.value)/100,{shouldValidate:true})}/></td>
+        <td><input type="number" min="0" max="100" value={Math.round((values.categories?.[i]?.otherVariableRate ?? 0)*1000)/10} onChange={e=>setValue(`categories.${i}.otherVariableRate`,Number(e.target.value)/100,{shouldValidate:true})}/></td>
         <td><input type="number" min="0" {...register(`categories.${i}.otherVariablePerService`,{valueAsNumber:true})}/></td>
         <td className="row-actions"><button title="Копировать" onClick={()=>fields.insert(i+1,{...getValues(`categories.${i}`),id:crypto.randomUUID()})}><Copy/></button><button title="Удалить" onClick={()=>fields.remove(i)}><Trash2/></button></td>
       </tr>)}</tbody></table></div>
