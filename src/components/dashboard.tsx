@@ -14,7 +14,7 @@ const rub = new Intl.NumberFormat("ru-RU", { style: "currency", currency: "RUB",
 const num = new Intl.NumberFormat("ru-RU", { maximumFractionDigits: 0 });
 const percent = (value: number | null) => value === null ? "—" : `${(value * 100).toFixed(1)}%`;
 const COLORS = ["#215f54", "#3b8276", "#68a89e", "#e7aa55", "#d57a55", "#68839c", "#95a867", "#8e6f9f", "#c18c9c", "#71837c", "#71a177"];
-const STORAGE_KEY = "mango-tbu-v1";
+const STORAGE_KEY = "mango-tbu-v2";
 
 type NumberKey = Exclude<keyof SalonInputs, "categories">;
 
@@ -106,7 +106,7 @@ export function Dashboard() {
 
   return <main>
     <header className="topbar">
-      <div><p className="eyebrow">MANGO · ФИНАНСОВАЯ МОДЕЛЬ</p><h1>Калькулятор ТБУ салона</h1><p>Показывает безубыточность, рекомендуемые цены и куда уходит каждый рубль.</p></div>
+      <div><p className="eyebrow">MANGO · ПЛАН ИЮНЯ 2026</p><h1>Калькулятор ТБУ салона</h1><p>Заполнен по финансовой модели: безубыточность, рекомендуемые цены и структура каждого рубля выручки.</p></div>
       <div className="actions">
         <select aria-label="Сценарий" value={activeScenario} onChange={e => loadPreset(e.target.value)}>{["Базовый", "Консервативный", "Целевой", "Пользовательский"].map(s => <option key={s}>{s}</option>)}</select>
         <button onClick={() => reset(exampleData)}><RotateCcw />Загрузить пример</button>
