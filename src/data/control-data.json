@@ -1,0 +1,14 @@
+{
+  "description": "Контрольный набор из финансовой модели салона",
+  "totalRevenue": 5041259,
+  "serviceRevenue": 3911240,
+  "businessFixedCosts": 1188120,
+  "businessCmr": 0.419017080980274,
+  "expectedBusinessBep": 2835493,
+  "serviceFixedCosts": 698742,
+  "serviceCmr": 0.33982084488575326,
+  "expectedServiceBep": 2056207,
+  "individualBepSumReference": 2396424,
+  "allocatedServiceBepSum": 2056207,
+  "tolerance": 1
+}
