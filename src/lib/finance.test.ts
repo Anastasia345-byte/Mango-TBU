@@ -15,6 +15,15 @@ describe("расчёт ТБУ", () => {
     expect(allocated).toBeCloseTo(result.serviceBep ?? 0, 6);
   });
 
+  it("пример приложения сверяется с финансовой моделью Манго", () => {
+    const result = calculateSalon(exampleData);
+    expect(result.totalRevenue).toBeCloseTo(control.totalRevenue, 0);
+    expect(result.serviceRevenue).toBeCloseTo(control.serviceRevenue, 0);
+    expect(result.businessBep).toBeCloseTo(control.expectedBusinessBep, 0);
+    expect(result.serviceBep).toBeCloseTo(control.expectedServiceBep, 0);
+    expect(result.categories.reduce((sum, c) => sum + (c.individualBepRevenue ?? 0), 0)).toBeCloseTo(control.individualBepSumReference, 0);
+  });
+
   it("не рассчитывает ТБУ при нулевой или отрицательной марже", () => {
     expect(calculateBep(100000, 0)).toBeNull();
     expect(calculateBep(100000, -0.1)).toBeNull();
