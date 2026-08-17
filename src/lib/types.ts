@@ -1,0 +1,87 @@
+export type MasterCategory = {
+  id: string;
+  direction: string;
+  name: string;
+  masters: number;
+  price: number;
+  volume: number;
+  commissionRate: number;
+  payoutPerService: number;
+  consumablesRate: number;
+  otherVariableRate: number;
+  otherVariablePerService: number;
+};
+
+export type SalonInputs = {
+  retailRevenue: number;
+  educationRevenue: number;
+  certificatesRevenue: number;
+  otherRevenue: number;
+  ownCosmeticsRevenue: number;
+  retailCost: number;
+  ownCosmeticsCost: number;
+  taxRate: number;
+  vatRate: number;
+  acquiringRate: number;
+  clientServiceRate: number;
+  otherBusinessVariableRate: number;
+  rent: number;
+  utilities: number;
+  adminPayroll: number;
+  adminContributions: number;
+  marketing: number;
+  software: number;
+  accounting: number;
+  household: number;
+  otherFixed: number;
+  serviceFixedCosts: number;
+  targetMargin: number;
+  minimumSafetyMargin: number;
+  categories: MasterCategory[];
+};
+
+export type CategoryResult = MasterCategory & {
+  revenue: number;
+  commission: number;
+  payout: number;
+  consumables: number;
+  otherVariable: number;
+  sharedFees: number;
+  variableCosts: number;
+  contribution: number;
+  contributionPerService: number | null;
+  cmr: number | null;
+  revenueShare: number;
+  allocatedFixedCosts: number;
+  individualBepUnits: number | null;
+  individualBepRevenue: number | null;
+  allocatedServiceBep: number | null;
+  minimumPrice: number | null;
+  targetPrice: number | null;
+  profit: number;
+  margin: number | null;
+  status: "safe" | "warning" | "loss" | "no-data";
+};
+
+export type CalculationResult = {
+  totalRevenue: number;
+  serviceRevenue: number;
+  totalVariableCosts: number;
+  serviceVariableCosts: number;
+  totalContribution: number;
+  serviceContribution: number;
+  businessCmr: number | null;
+  serviceCmr: number | null;
+  businessFixedCosts: number;
+  serviceFixedCosts: number;
+  businessBep: number | null;
+  serviceBep: number | null;
+  profit: number;
+  profitMargin: number | null;
+  safetyMarginRub: number | null;
+  safetyMarginPercent: number | null;
+  categories: CategoryResult[];
+  expenseBreakdown: { name: string; value: number; type: "Переменные" | "Постоянные" | "Результат" }[];
+  checks: { label: string; ok: boolean; delta?: number }[];
+  recommendations: string[];
+};
